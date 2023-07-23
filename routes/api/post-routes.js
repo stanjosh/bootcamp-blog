@@ -1,15 +1,10 @@
 const router = require('express').Router();
-const { BlogPost, User, Comment } = require('../../models');
+const db = require('../../db');
 
 router.get('/', async (req, res) => {
-  let blogpost = await BlogPost.findAll(
-    {
-      include: [{ model: User }, { model: Comment }]
-
-    }
-  )
-  if (blogpost) {
-    res.json(blogpost)
+  let blogposts = await db.getBlogPosts();
+  if (blogposts) {
+    res.json(blogposts)
   }
   else {
     res.status(404).send('No blog posts found')
@@ -18,9 +13,7 @@ router.get('/', async (req, res) => {
 
 // get one blogpost
 router.get('/:id', async (req, res) => {
-  let blogpost = await BlogPost.findByPk(req.params.id, {
-    include: [{ model: User }, { model: Comment }]
-  })
+  let blogpost = await db.getBlogPost(req.params.id);
   if (blogpost) {
     res.json(blogpost)
   }
@@ -29,8 +22,8 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.post('/', (req, res) => {
-  BlogPost.create(req.body)
+router.post('/', async (req, res) => {
+  await db.createBlogPost(req.body)
     .then((blogpost) => {
       res.status(200).json(blogpost);
     })
@@ -40,12 +33,8 @@ router.post('/', (req, res) => {
     });
 });
 
-router.put('/:id', (req, res) => {
-  BlogPost.update(req.body, {
-    where: {
-      id: req.params.id,
-    },
-  })
+router.put('/:id', async (req, res) => {
+  await db.updateBlogPost(req.params.id, req.body)
     .then((blogpost) => {
       res.status(200).json(blogpost);
     })
@@ -55,11 +44,7 @@ router.put('/:id', (req, res) => {
 });
 
 router.delete('/:id', async (req, res) => {
-  await BlogPost.destroy({
-  where: {
-        id: req.params.id
-      }
-  })
+  await db.deleteBlogPost(req.params.id)
   .then(() => {
     res.status(200).send("Successfuly deleted blog post")
   })

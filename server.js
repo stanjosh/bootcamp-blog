@@ -16,6 +16,8 @@ var hbs = engine.create(
       partialsDir: `${__dirname}/views/partials`,
 });
 
+
+
 app.engine('hbs',  hbs.engine);
 app.set('view engine', 'hbs');
 app.set('views', `${__dirname}/views`);

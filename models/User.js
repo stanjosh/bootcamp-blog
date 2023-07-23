@@ -14,6 +14,7 @@ User.init(
     },
     author_name:{
       type: DataTypes.STRING,
+      unique: true,
       allowNull: false
     },
     email:{

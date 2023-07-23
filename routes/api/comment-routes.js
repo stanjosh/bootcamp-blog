@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { Comment, User, BlogPost } = require('../../models');
+const db = require('../../db');
 
 router.get('/', async (req, res) => {
   let comments = await Comment.findAll({
@@ -15,9 +16,7 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/:id', async (req, res) => {
-  let comment = await Comment.findByPk(req.params.id, {
-    include: [{model: User }, { model: BlogPost }]
-  });
+  let comment = await db.getComments(req.params.id);
   if (comment) {
     res.json(comment)
   }
@@ -28,27 +27,22 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  await Comment.create(req.body)
-    .then((comment) => {
-      res.status(200).json(comment);
-    })
+  await db.createComment(req.body)
+  .then((comment) => {
+    res.status(200).json(comment);
+  })
 
 });
 
 router.put('/:id', async (req, res) => {
-  await Comment.update(req.body, { where: { id: req.params.id } })
-    .then((comment) => {
-      res.status(200).json(comment);
-    })
+  await db.updateComment(req.params.id, req.body)
+  .then((comment) => {
+    res.status(200).json(comment);
+  })
 });
 
 router.delete('/:id', async (req, res) => {
-  const commentID = req.params.id
-    await Comment.destroy({
-      where: {
-          id: commentID,
-      }
-  })
+  await db.deleteComment(req.params.id)
   .then((comment) => {
     res.status(200).send("Successfuly deleted comment")
   })

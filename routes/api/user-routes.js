@@ -1,11 +1,11 @@
 const router = require('express').Router();
-const { Comment, User, BlogPost } = require('../../models');
+const db = require('../../db');
 
 
 router.get('/login/:email', async (req, res) => {
 
   //verify user and set session
-  let users = await User.findAll();
+  let users = await db.getUsers()
   if (users) {
     res.json(users)
   }
@@ -16,9 +16,7 @@ router.get('/login/:email', async (req, res) => {
 });
 
 router.get('/:id', async (req, res) => {
-  let user = await User.findByPk(req.params.id, {
-    include: [{ model: BlogPost }, { model: Comment }]
-  });
+  let user = await db.getUser(req.params.id);
   if (user) {
     res.json(user)
   }
@@ -29,28 +27,22 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  await User.create(req.body)
-    .then((user) => {
-      res.status(200).json(user);
-    })
+  await db.createUser(req.body)
+  .then((user) => {
+    res.status(200).json(user);
+  })
 
 });
 
-router.put('/:id', async (req, res) => {
-  let userUpdate = req.body
-  await User.update(userUpdate, { where: { id: req.params.id } })
-    .then((user) => {
-      res.status(200).json(user);
-    })
+router.put('/', async (req, res) => {
+  await db.createUser(req.params.id, req.body)
+  .then((user) => {
+    res.status(200).json(user);
+  })
 });
 
 router.delete('/:id', async (req, res) => {
-  const userID = req.params.id
-    await User.destroy({
-      where: {
-          id: userID,
-      }
-  })
+  await db.deleteUser(req.params.id)
   .then((user) => {
     res.status(200).send("Successfuly deleted user")
   })

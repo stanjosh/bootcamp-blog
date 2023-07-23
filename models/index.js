@@ -6,17 +6,11 @@ const BlogPost = require('./BlogPost');
 
 
 User.hasMany(BlogPost);
-
 User.hasMany(Comment);
-
-BlogPost.hasMany(Comment);
-
 BlogPost.belongsTo(User);
-
+BlogPost.hasMany(Comment);
 Comment.belongsTo(User);
-
-Comment.belongsTo(BlogPost);
-
+Comment.hasOne(BlogPost);
 
 
 module.exports = {
