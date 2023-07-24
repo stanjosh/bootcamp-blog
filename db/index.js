@@ -1,14 +1,14 @@
 const { User, BlogPost, Comment } = require("../models");
-const bodyParser = require("body-parser");
+
 
 const db = {
-  getComments: async () => {
+  getAllComments: async () => {
     return await Comment.findAll({
-      include: [
-        { model: User, 
-          attributes: ["id", "author_name"], 
-          as: "user" },
-      ],
+      include: [{ 
+        model: User,
+        attributes: ["id", "author_name"],
+        as: "user",
+       }],
       order: [["comment_time", "DESC"]]
     });
   },
@@ -60,17 +60,10 @@ const db = {
         { model: User, attributes: ["id", "author_name"], as: "user" },
         {
           model: Comment,
-          include: [
-            { model: User, 
-              attributes: ["id", "author_name"], 
-              as: "user" },
-            {
-              model: Comment,
-              include: {
-                model: User,
-                attributes: ["id", "author_name"],
-                as: "user",
-              },
+          include: [{ 
+            model: User, 
+            attributes: ["id", "author_name"], 
+            as: "user" 
             },
           ]
         },
@@ -90,7 +83,7 @@ const db = {
     return await BlogPost.destroy({ where: { id: id } });
   },
 
-  getUsers: async () => {
+  getAllUsers: async () => {
     return await User.findAll({
       include: [{ model: BlogPost }, { model: Comment }],
     });
@@ -102,9 +95,37 @@ const db = {
     });
   },
 
+  getUserLogin: async (email) => {
+    return await User.findOne({
+      where: { email: email },
+    });
+  },
+
   createUser: async (user) => {
     return await User.create(user);
   },
-};
+
+  updateUser: async (id, info) => {
+    return await User.update(info, { where: { id: id } })
+    .catch((err) => {
+      console.log(err)
+      return false 
+    });
+  },
+
+  authUser: async (user) => {
+    console.log(user)
+    let password = user.password;
+    let authenticatedUser = await User.findOne({
+      where: { email: user.email },
+    })
+    if (authenticatedUser.authenticate(password)) {
+      return authenticatedUser;
+    }
+    else {
+      return false;
+    }
+  }
+}
 
 module.exports = db;

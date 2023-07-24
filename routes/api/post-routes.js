@@ -4,7 +4,7 @@ const db = require('../../db');
 router.get('/', async (req, res) => {
   let blogposts = await db.getBlogPosts();
   if (blogposts) {
-    res.json(blogposts)
+    res.status(200).json(blogposts)
   }
   else {
     res.status(404).send('No blog posts found')
@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   let blogpost = await db.getBlogPost(req.params.id);
   if (blogpost) {
-    res.json(blogpost)
+    res.status(200).json(blogpost)
   }
   else {
     res.status(404).send('Blog post not found')

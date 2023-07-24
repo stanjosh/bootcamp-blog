@@ -5,9 +5,12 @@ const views = require('./views');
 const dayjs = require('dayjs');
 const engine = require('express-handlebars');
 const sequelize = require('./config/connection');
-
+const cookieParser = require('cookie-parser');
 const app = express();
 const PORT = process.env.PORT || 3001;
+const session = require('express-session');
+
+
 var hbs = engine.create(
     {
       extname: '.hbs',
@@ -25,16 +28,28 @@ var hbs = engine.create(
       }
 });
 
+const oneDay = 1000 * 60 * 60 * 24;
+app.use(session({
+  secret: process.env.SOME_OTHER_PLAINTEXT_PASSWORD,
+  saveUninitialized:true,
+  cookie: { maxAge: oneDay },
+  resave: false 
+}));
+//username and password
+
+
 
 
 app.engine('hbs',  hbs.engine);
 app.set('view engine', 'hbs');
 app.set('views', `${__dirname}/views`);
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '/public')));
-app.use(views);
+
 app.use(routes);
+app.use(views);
 
 
 

@@ -1,12 +1,15 @@
 <div class="header">
     <h1 class="title">facebook 2</h1>
     
-        
-    {{#if user}}
-        <p>Logged in as {{user.author_name}}</p>
-        <a href="/logout">Logout</a>
+    {{#if session}}
+        {{#dataValues}}
+        <p>Logged in as {{session.userid}}</p>
+        {{/dataValues}}
+        <a href="user/logout">Logout</a>
+
     {{else}}
             {{> loginForm}}
             {{> signupForm}}
     {{/if}}
+
 </div>

@@ -1,8 +1,10 @@
 
 
-
-<div class="mainWrapper">
-    {{#each posts}}
-        {{>blogPost this}}
-    {{/each}}
+<div class="greeting">
+    HI
+    {{# if errMessage}}
+        <div class="error">
+            <p>{{errMessage}}</p>
+        </div>
+    {{/if}}
 </div>

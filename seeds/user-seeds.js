@@ -4,27 +4,27 @@ const userData = [
   {
     email: 'gorp@gorpy.com',
     author_name: 'Ralph Gorp',
-    password: 'password123'
+    password: '$2a$12$gLnDmzH.37hg94T4TgZcjuCEMa909p8L8M3p9qqHQms9GyNJ4zfNy'
   },
   {
     email: 'me@cake.bum',
     author_name: 'Shoe McGee',
-    password: 'password123'
+    password: '$2a$12$gLnDmzH.37hg94T4TgZcjuCEMa909p8L8M3p9qqHQms9GyNJ4zfNy'
   },
   {
     email: 'john@rugcleaning.net',
     author_name: 'John Johnson',
-    password: 'password123'
+    password: '$2a$12$gLnDmzH.37hg94T4TgZcjuCEMa909p8L8M3p9qqHQms9GyNJ4zfNy'
   },
   {
     email: 'billbill231@yahoo.com',
     author_name: 'bill billson',
-    password: 'password123'
+    password: '$2a$12$gLnDmzH.37hg94T4TgZcjuCEMa909p8L8M3p9qqHQms9GyNJ4zfNy'
   },
   {
     email: 'steve@grillmaster.org',
     author_name: 'Steven Stevenstein',
-    password: 'password123'
+    password: '$2a$12$gLnDmzH.37hg94T4TgZcjuCEMa909p8L8M3p9qqHQms9GyNJ4zfNy'
   },
 ];
 

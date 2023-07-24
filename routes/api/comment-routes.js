@@ -2,9 +2,9 @@ const router = require('express').Router();
 const db = require('../../db');
 
 router.get('/', async (req, res) => {
-  let comments = db.getComments();
+  let comments = await db.getAllComments();
   if (comments) {
-    res.json(comments)
+    res.status(200).json(comments)
   }
   else {
     res.status(404).send('No comments found')
@@ -13,9 +13,9 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/:id', async (req, res) => {
-  let comment = await db.getComments(req.params.id);
+  let comment = await db.getComment(req.params.id);
   if (comment) {
-    res.json(comment)
+    res.status(200).json(comment)
   }
   else {
     res.status(404).send('Comment not found')

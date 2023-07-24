@@ -15,6 +15,18 @@ router.get('/login/:email', async (req, res) => {
 
 });
 
+router.get('/', async (req, res) => {
+  let user = await db.getAllUsers(req.params.id);
+  if (user) {
+    res.json(user)
+  }
+  else {
+    res.status(404).send('User not found')
+  }
+
+});
+
+
 router.get('/:id', async (req, res) => {
   let user = await db.getUser(req.params.id);
   if (user) {
@@ -31,13 +43,21 @@ router.post('/', async (req, res) => {
   .then((user) => {
     res.status(200).json(user);
   })
+  .catch((err) => {
+    console.log(err)
+    res.status(500).send("There was an error creating this user")
+  })
 
 });
 
-router.put('/', async (req, res) => {
-  await db.createUser(req.params.id, req.body)
+router.put('/:id', async (req, res) => {
+  await db.updateUser(req.params.id, req.body)
   .then((user) => {
     res.status(200).json(user);
+  })
+  .catch((err) => {
+    console.log(err)
+    res.status(500).send("There was an error editing this user")
   })
 });
 

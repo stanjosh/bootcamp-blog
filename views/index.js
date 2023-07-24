@@ -1,18 +1,16 @@
 const router = require('express').Router();
 const db = require('../db');
 
-router.get('/form', async (req, res) => {
-    await db.getBlogPosts()
-    .then((posts) => {
-    res.render('form');
-    })
-});
+
 
 router.get('/', async (req, res) => {
-    await db.getBlogPosts()
-    .then((posts) => {
-    res.render('home', { posts: posts } );
-    })
+    posts = await db.getBlogPosts();
+    console.log(req.session)
+    if(req.session.userid){
+        res.render('blog', {posts: posts, session: req.session});
+    }else
+    res.render('home');
 });
+    
 
 module.exports = router;
