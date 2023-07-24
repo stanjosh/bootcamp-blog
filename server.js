@@ -2,9 +2,9 @@ const path = require('path');
 const express = require('express');
 const routes = require('./routes');
 const views = require('./views');
+const dayjs = require('dayjs');
 const engine = require('express-handlebars');
 const sequelize = require('./config/connection');
-
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -14,6 +14,15 @@ var hbs = engine.create(
       defaultLayout: 'main',
       layoutsDir: `${__dirname}/views/layouts`,
       partialsDir: `${__dirname}/views/partials`,
+      helpers: {
+        formatTime: function (date, format) {
+          return dayjs(date).format(format);
+        }
+      },
+      runtimeOptions: {
+        allowProtoPropertiesByDefault: true,
+        allowProtoMethodsByDefault: true
+      }
 });
 
 
@@ -23,7 +32,7 @@ app.set('view engine', 'hbs');
 app.set('views', `${__dirname}/views`);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(express.static(path.join(__dirname, '/public')));
 app.use(views);
 app.use(routes);
 

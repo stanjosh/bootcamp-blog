@@ -1,11 +1,8 @@
 const router = require('express').Router();
-const { Comment, User, BlogPost } = require('../../models');
 const db = require('../../db');
 
 router.get('/', async (req, res) => {
-  let comments = await Comment.findAll({
-    include: [{model: User }, {model: BlogPost}]
-  });
+  let comments = db.getComments();
   if (comments) {
     res.json(comments)
   }

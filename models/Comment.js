@@ -32,8 +32,10 @@ Comment.init(
       allowNull: false
     },
     comment_time:{
-      type: DataTypes.DATE
-    }
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
   },
   {
     sequelize,

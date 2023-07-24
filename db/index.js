@@ -5,20 +5,21 @@ const db = {
   getComments: async () => {
     return await Comment.findAll({
       include: [
-        { model: User, attributes: ["id", "author_name"], as: "user" },
-        { model: BlogPost },
+        { model: User, 
+          attributes: ["id", "author_name"], 
+          as: "user" },
       ],
+      order: [["comment_time", "DESC"]]
     });
   },
 
   getComment: async (id) => {
     return await Comment.findByPk(id, {
       include: [
-        { model: User, attributes: ["id", "author_name"], as: "user" },
-        {
-          model: BlogPost,
-        },
-      ],
+        { model: User, 
+          attributes: ["id", "author_name"], 
+          as: "user" },
+      ]
     });
   },
 
@@ -37,11 +38,19 @@ const db = {
   getBlogPosts: async () => {
     return await BlogPost.findAll({
       include: [
-        { model: User, attributes: ["id", "author_name"], as: "user" },
+        { model: User, 
+          attributes: ["id", "author_name"], 
+          as: "user" },
         {
           model: Comment,
+          include: {
+            model: User,
+            attributes: ["id", "author_name"],
+            as: "user",
+          },
         },
       ],
+      order: [["post_time", "DESC"]]
     });
   },
 
@@ -51,6 +60,19 @@ const db = {
         { model: User, attributes: ["id", "author_name"], as: "user" },
         {
           model: Comment,
+          include: [
+            { model: User, 
+              attributes: ["id", "author_name"], 
+              as: "user" },
+            {
+              model: Comment,
+              include: {
+                model: User,
+                attributes: ["id", "author_name"],
+                as: "user",
+              },
+            },
+          ]
         },
       ],
     });

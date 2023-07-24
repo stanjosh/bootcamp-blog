@@ -1,29 +1,8 @@
 
 
 
-
-{{#each posts}}
-    {{#dataValues}}
-    <div class="blogPost">
-    <div class="blogPost_header">
-        <h1 class="blogPost_title">{{this.post_title}}</h1>
-        <p class="blogPost_content">{{this.post_content}}</p>
-        <div class="blogPost_meta">
-            <span class="blogPost_author">{{this.user.author_name}}</span>
-            <span class="blogPost_date">{{this.post_time}}</span>
-        </div>
-    </div>
-    </div>
-    {{#each comments}}
-        {{#dataValues}}
-        <div class="blogPost_comment">
-            <div class="blogPost_comment_header">
-                <span class="blogPost_comment_author">{{this.author_name}}</span>
-                <span class="blogPost_comment_date">{{this.comment_time}}</span>
-            </div>
-            <p class="blogPost_comment_content">{{this.comment_content}}</p>
-        </div>
-        {{/dataValues}}
+<div class="mainWrapper">
+    {{#each posts}}
+        {{>blogPost this}}
     {{/each}}
-    {{/dataValues}}
-{{/each}}
+</div>
