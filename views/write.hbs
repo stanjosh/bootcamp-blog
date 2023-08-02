@@ -1,0 +1,6 @@
+{{if blogid && user && session}}
+    {{> edit blogid=blogid}}
+{{else if user && session}}
+    {{> edit}}
+    {{> login}}
+{{/if}}

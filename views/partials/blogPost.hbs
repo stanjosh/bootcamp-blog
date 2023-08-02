@@ -1,0 +1,39 @@
+{{#dataValues}}
+    <div class="blogPost">
+        <div class="blogPost_header">
+            
+            <h3 class="blogPost_author">
+                {{this.user.dataValues.author_name}} posted
+            </h3>
+            <h1 class="blogPost_title">
+                {{this.post_title}}
+            </h1>
+            <p class="blogPost_content">
+                {{this.post_content}}
+            </p>
+            <div class="blogPost_meta">
+                <span class="blogPost_date">{{formatTime this.post_time 'MMM DD, YYYY [at] h:mm A'}}</span>
+            </div>
+
+            <div class="blogPost_nav">
+                {{#with this as | post |}}
+                {{#with ../session as | session | }}
+                {{#if session.loggedIn}}
+                {{#if (compare post.user_id session.user_id)}}
+                <button class="blogPost_button deletePostButton" onClick="handleDeletePost({{{post.id}}})">✖️</button>
+                <button class="blogPost_button editPostButton" onClick="handleEditPost({{{post.id}}})">✏️</button>
+                {{/if}}
+                <button class="blogPost_button commentPostButton" onClick="handleCommentPost({{{post.id}}})">💬</button>
+                {{/if}}
+                {{/with}}
+                {{/with}}
+            </div>
+            
+        </div>
+    <div>
+    {{#each comments}}
+        {{> comment this}}
+    {{/each}}
+    </div>
+    </div>
+{{/dataValues}}
