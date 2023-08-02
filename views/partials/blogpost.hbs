@@ -1,0 +1,23 @@
+{{#dataValues}}
+    <div class="blogPost">
+    <div class="blogPost_header">
+        {{#if this.user.author_name}}<h3><span class="blogPost_author">{{this.user.author_name}}</span> posted</h3>{{/if}}
+        <h1 class="blogPost_title">{{this.post_title}}</h1>
+        <p class="blogPost_content">{{this.post_content}}</p>
+        <div class="blogPost_meta">
+            
+            <span class="blogPost_date">{{formatTime this.post_time 'MMM DD, YYYY [at] h:mm A'}}</span>
+        </div>
+        <div class="blogPost_nav">
+            <button class="blogPost_button" data-id="{{this.id}}">✖️</button>
+            <button class="blogPost_button" data-id="{{this.id}}">✏️</button>
+            <button class="blogPost_button" data-id="{{this.id}}">💬</button>
+        </div>
+    </div>
+    <div>
+    {{#each comments}}
+        {{> comment this}}
+    {{/each}}
+    </div>
+    </div>
+{{/dataValues}}
