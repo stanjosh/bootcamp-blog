@@ -19,9 +19,14 @@
                 {{#with this as | post |}}
                 {{#with ../session as | session | }}
                 {{#if session.loggedIn}}
-                {{#if (compare post.user_id session.user_id)}}
-                <button class="blogPost_button deletePostButton" onClick="handleDeletePost({{{post.id}}})">✖️</button>
+                {{#if (compare post.user_id session.user_id)}}             
+                <button type="button" class="btn btn-primary deletePostButton" data-id="{{post.id}}" data-bs-toggle="modal" data-bs-target="#deletePostDialog">
+                ✖️
+                </button>
+                
+                
                 <button class="blogPost_button editPostButton" onClick="handleEditPost({{{post.id}}})">✏️</button>
+
                 {{/if}}
                 <button class="blogPost_button commentPostButton" onClick="handleCommentPost({{{post.id}}})">💬</button>
                 {{/if}}
@@ -32,7 +37,39 @@
         </div>
     <div>
     {{#each comments}}
-        {{> comment this}}
+    {{#dataValues}}
+        <div class="blogPost_comment">
+            <div class="blogPost_comment_header">
+                <p class="blogPost_comment_content">{{this.comment_content}}</p>
+                {{#user}}
+                {{#dataValues}}
+                <span class="blogPost_comment_author">-{{author_name}} on </span>
+                {{/dataValues}}
+                {{/user}}
+
+                <span class="blogPost_comment_date">{{formatTime this.comment_time 'MM/DD/YY h:mm A'}}</span>
+    {{/dataValues}}
+
+
+                    {{#with this as | comment |}}
+                    {{#with ../../session as | session | }}
+                    
+                    {{#if session.loggedIn}}
+                    
+                    {{#if (compare comment.dataValues.user_id session.user_id)}}           
+                      
+                    <button type="button" class="btn btn-primary deleteCommentButton" data-id="{{comment.dataValues.id}}" data-bs-toggle="modal" data-bs-target="#deleteCommentDialog">
+                    ✖️
+                    </button>
+                    {{/if}}
+                    {{/if}}
+                    {{/with}}
+                    {{/with}}
+
+            </div>
+            
+        </div>
+        
     {{/each}}
     </div>
     </div>
