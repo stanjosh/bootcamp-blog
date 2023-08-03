@@ -1,9 +1,6 @@
-
-
 {{> header }}
 
-{{log session}}
-
+<!--blog-->
 <div class="mainWrapper">
 
     {{#each posts}}
@@ -12,19 +9,14 @@
 
 </div>
 
-{{#if errMessage}}
-    <div class="error">
-        <p>{{errMessage}}</p>
-    </div>
-{{/if}}
 
-<dialog id="deletePostDialog">
-    <h3 class="deletePostDialogTitle">
-        are you sure you want to delete this?
-      <button id="cancel" type="reset">Cancel</button>
-      <button type="submit">Confirm</button>
-    </h3>
-</dialog>
+<!-- error message if error -->
+{{#if errMessage}}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+  <strong>Holy guacamole!</strong>{{errMessage}}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{{/if}}
 
 
 {{> footer }}

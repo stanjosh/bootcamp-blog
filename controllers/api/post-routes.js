@@ -25,35 +25,47 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
+  if (req.session.logged_in) {  
   await db.createBlogPost(req.body)
     .then((blogpost) => {
       res.status(200).json(blogpost);
     })
     .catch((err) => {
       console.log(err);
-      res.status(400).json(err);
+      res.status(500).json(err);
     });
+  } else {
+    return res.status(401)
+  }
 });
 
 router.put('/:id', async (req, res) => {
+  if (req.session.logged_in && req.session.user_id === req.body.user_id) {
   await db.updateBlogPost(req.params.id, req.body)
     .then((blogpost) => {
       return res.status(200).json(blogpost);
     })
     .catch((err) => {
-      return res.status(400).json(err);
+      return res.status(500).json(err);
     });
+  } else {
+    return res.status(401)
+  }
 });
 
 router.delete('/:id', async (req, res) => {
+  if (req.session.logged_in && req.session.user_id === req.body.user_id) {
   await db.deleteBlogPost(req.params.id)
   .then(() => {
     return res.status(200).send("Successfuly deleted blog post")
   })
   .catch((err) => {
     console.log(err)
-    return res.status(500).send("There was an error deleting this blog post")
+    return res.status(500).json(err);
   })
+  } else {
+    return res.status(401)
+  }
 });
 
 module.exports = router;

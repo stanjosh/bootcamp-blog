@@ -1,53 +1,34 @@
 const router = require('express').Router();
 const { db } = require('../../model');
 
-router.get('/', async (req, res) => {
-  let comments = await db.getAllComments();
-  if (comments) {
-    let comments = comments.map((comment) => comment.get({ plain: true }));
-    return res.status(200).json(comments)
-  }
-  else {
-    return res.status(404).send('No comments found')
-  }
-
-});
-
-router.get('/:id', async (req, res) => {
-  let comment = await db.getComment(req.params.id).get({ plain: true });
-  if (comment) {
-    return res.status(200).json(comment)
-  }
-  else {
-    return res.status(404).send('Comment not found')
-  }
-
-});
-
 router.post('/', async (req, res) => {
+  if (req.session.logged_in) {
   await db.createComment(req.body)
   .then((comment) => {
     return res.status(200).json(comment);
   })
-
-});
-
-router.put('/:id', async (req, res) => {
-  await db.updateComment(req.params.id, req.body)
-  .then((comment) => {
-    return res.status(200).json(comment);
+  .catch((err) => {
+    console.log(err)
+    return res.status(500)
   })
+  } else {
+    return res.status(401)
+  }
 });
 
 router.delete('/:id', async (req, res) => {
+  if (req.session.logged_in && req.session.user_id === req.body.user_id) {
   await db.deleteComment(req.params.id)
   .then((comment) => {
-    return res.status(200).send("Successfuly deleted comment")
+    return res.status(200)
   })
   .catch((err) => {
     console.log(err)
-    return res.status(500).send("There was an error deleting this comment")
+    return res.status(500)
   })
+  } else {
+    return res.status(401)
+  }
 });
 
 module.exports = router;

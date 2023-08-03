@@ -1,6 +1,7 @@
 const { Comment } = require('../');
 
 const commentData = [
+
   {
     user_id: 1,
     blogpost_id: 3,
@@ -51,6 +52,12 @@ const commentData = [
   },
 ];
 
-const commentSeeds = () => Comment.bulkCreate(commentData);
+const commentSeeds = async (blogs, users) => {
+  commentData.forEach((comment) => {
+  comment.user_id = users[Math.floor(Math.random() * users.length)];
+  comment.blogpost_id = blogs[Math.floor(Math.random() * blogs.length)];
+  });
+  await Comment.bulkCreate(commentData)
+};
 
 module.exports = commentSeeds;
