@@ -71,6 +71,11 @@ const db = {
         },
       ],
       order: [["post_time", "DESC"]]
+    })
+    .then((blogs) => {
+      return blogs.map((blog) => {
+        return blog.get({plain: true})
+      })
     });
   },
 
@@ -112,7 +117,7 @@ const db = {
   getUser: async (id) => {
     return await User.findByPk(id, {
       include: [{ model: BlogPost }, { model: Comment }],
-    }).get({ plain: true });
+    });
   },
 
   createUser: async (user) => {
@@ -133,7 +138,6 @@ const db = {
     let authUser = await User.findOne({
       where: { email: user.email }
     })
-    console.log(authUser.toJSON())
     if (authUser) {
     return authUser.authenticate(password) ? authUser.toJSON() : false;
     } else {

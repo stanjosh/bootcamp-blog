@@ -1,13 +1,17 @@
 {{> header }}
 
 <!--blog-->
-<div class="mainWrapper">
+<div class="container px-3 mx-auto">
 
     {{#each posts}}
         {{> blogPost this session=../session }}
     {{/each}}
 
 </div>
+
+
+<button type="button" class="btn newPostButton">+</button>
+
 
 
 <!-- error message if error -->

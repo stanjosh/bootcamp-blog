@@ -1,3 +1,20 @@
 
+.post-body {
+    border: 2px solid grey;
+    border-radius: 4px;
+    margin-top: 10px;
 }
+
+.post-title {
+    background-color: aquamarine;
+    font-size: x-large;
+}
+
+.post-content {
+    font-size: medium;
+    padding: 10px;
+}
+
+.comment {
+    margin: 5%;
 }

@@ -1,6 +1,5 @@
 const router = require('express').Router();
-const { db } = require('../../model');
-
+const { db } = require('../model')
 
 router.get('/', async (req, res) => {
   let user = await db.getAllUsers(req.params.id);
@@ -27,16 +26,16 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   await db.createUser(req.body)
   .then((user) => {
-    return res.status(200).json(user);
-  })
+      return res.status(200).json(user);
+    })
   .catch((err) => {
-    console.log(err)
-    return res.status(500).send("There was an error creating this user")
-  })
+      console.log(err)
+      return res.status(500).send("There was an error creating this user")
+    })
 });
 
 router.put('/:id', async (req, res) => {
-  if (req.session.logged_in && req.session.user_id === req.body.user_id) {
+  if (req.session.loggedIn && req.session.user_id === req.body.user_id) {
   await db.updateUser(req.params.id, req.body)
   .then((user) => {
     return res.status(200).json(user);
@@ -50,19 +49,35 @@ router.put('/:id', async (req, res) => {
   };
 });
 
-router.delete('/:id', async (req, res) => {
-  if (req.session.logged_in && req.session.user_id === req.body.user_id) {
-  await db.deleteUser(req.params.id)
-  .then((user) => {
-    return res.status(200).send("Successfuly deleted user")
-  })
+router.post('/login', async (req,res) => {
+  const user = await db.authUser(req.body)
   .catch((err) => {
     console.log(err)
-    return res.status(500).send("There was an error deleting this user")
-  })
-  } else {
+    return res.status(500).send("There was an error logging in.")
+  });
+  if ( user ) {  
+    req.session.user_id=user.id;
+    req.session.author_name=user.author_name;
+    req.session.email=user.email;
+    req.session.loggedIn=true;
+    req.session.save;
+    res.redirect('/')
+  }
+  else{
     return res.status(401);
-  };
+  }
+})
+
+router.get('/logout',(req,res) => {
+  req.session.destroy();
+  res.redirect('/');
 });
+
+router.get('/register', (req, res) => {
+  return res.render('register');
+})
+
+
+
 
 module.exports = router;

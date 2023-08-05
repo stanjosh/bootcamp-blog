@@ -1,17 +1,15 @@
 const router = require('express').Router();
-const { db } = require('../model');
+const { db } = require('../model') 
 
 
-router.use(function (req, res, next) {
+router.use(async function (req, res, next) {
     res.locals.session = req.session;
+    res.locals.posts = await db.getBlogPosts();
     next();
 });
 
 router.get('/', async (req, res) => {
-    let posts = await db.getBlogPosts();
-    res.render('home', {
-        posts: posts
-    });
+    res.render('home');
 });
     
 

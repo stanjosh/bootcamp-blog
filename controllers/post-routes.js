@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { db } = require('../../model');
+const { db } = require('../model');
 
 router.get('/', async (req, res) => {
   let blogposts = await db.getBlogPosts();
@@ -12,20 +12,8 @@ router.get('/', async (req, res) => {
   }
 });
 
-// get one blogpost
-router.get('/:id', async (req, res) => {
-  let blogpost = await db.getBlogPost(req.params.id);
-  if (blogpost) {
-    let blogpost = blogpost.get({ plain: true });
-    res.status(200).json(blogpost)
-  }
-  else {
-    res.status(404).send('Blog post not found')
-  }
-});
-
 router.post('/', async (req, res) => {
-  if (req.session.logged_in) {  
+  if (req.session.loggedIn) {  
   await db.createBlogPost(req.body)
     .then((blogpost) => {
       res.status(200).json(blogpost);
@@ -40,12 +28,12 @@ router.post('/', async (req, res) => {
 });
 
 router.put('/:id', async (req, res) => {
-  if (req.session.logged_in && req.session.user_id === req.body.user_id) {
-  await db.updateBlogPost(req.params.id, req.body)
-    .then((blogpost) => {
+  if (req.session.loggedIn && req.session.user_id === res.posts.user_id) {
+  await BlogPost.update(req.body, { where: { id: req.params.id } })
+  .then((blogpost) => {
       return res.status(200).json(blogpost);
     })
-    .catch((err) => {
+  .catch((err) => {
       return res.status(500).json(err);
     });
   } else {
@@ -54,8 +42,9 @@ router.put('/:id', async (req, res) => {
 });
 
 router.delete('/:id', async (req, res) => {
-  if (req.session.logged_in && req.session.user_id === req.body.user_id) {
-  await db.deleteBlogPost(req.params.id)
+  let post = await db.getBlogPost(req.params.id)
+  if (req.session.loggedIn && req.session.user_id === post.id) {
+  await post.destroy()
   .then(() => {
     return res.status(200).send("Successfuly deleted blog post")
   })
@@ -68,4 +57,10 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-module.exports = router;
+
+
+
+
+
+
+module.exports = router
