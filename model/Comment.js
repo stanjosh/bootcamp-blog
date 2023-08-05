@@ -18,7 +18,8 @@ Comment.init(
       references: {
         model: User,
         key: 'id'
-      }
+      },
+      allowNull: false
     },
     blogpost_id:{
       type: DataTypes.UUID,

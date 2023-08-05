@@ -1,54 +1,71 @@
 <div class="blogPost mx-3">
-        <div class="post-body">
+    <div class="post-body">
 
-            <h5 class="post-title">
-                {{this.post_title}} 
-            </h5>
-            <h6 class="post-meta">
+        <h5 class="post-title">
+            {{this.post_title}} 
+        </h5>
+        <h6 class="post-meta">
+            Posted by {{user.author_name}} on {{formatTime this.post_time 'MM/DD/YY h:mm A'}}
+        </h6>
+            
+        <p class="post-content">
+            {{this.post_content}}
+        </p>
 
-            </h6>
-                
-            <p class="post-content">
-                {{this.post_content}}
-            </p>
 
 
-            <div class="post-nav">
-                {{#with this as | post |}}
-                {{#with session as | session | }}
+        
+    {{#each comments}}
+        <div class="comment">
+
+            <h5 class="comment-content">{{this.comment_content}}</h5>
+            <p class="comment-meta">-{{user.author_name}} on {{formatTime this.comment_time 'MM/DD/YY h:mm A'}}</p>
+        
+
+        {{#with this as | comment |}}
+            {{#with ../session as | session | }}
                 {{#if session.loggedIn}}
-                {{#if (compare post.user_id session.user_id)}}             
-                <button class="btn btn-primary deletePostButton" data-id="{{post.id}}" data-bs-toggle="modal" data-bs-target="#deletePostDialog">✖️</button>
-                                
-                <button class="btn btn-primary editPostButton" data-id="{{post.id}}" data-bs-toggle="modal" data-bs-target="#deletePostDialog">✏️</button>
+                    {{#if (compare comment.user_id session.user_id)}}   
 
-                {{/if}}
-                <button class="btn btn-primary commentPostButton" data-id="{{post.id}}" data-bs-toggle="modal" data-bs-target="#deletePostDialog">💬</button>
-                {{/if}}
-                {{/with}}
-                {{/with}}
-            </div>
-            
-        {{#each comments}}
-            <div class="comment">
+                    <button
+                     class="btn btn-primary btn-sm deleteCommentButton"
+                     data-id="{{comment.id}}" 
+                     data-bs-toggle="modal" 
+                     data-bs-target="#deleteCommentDialog"
+                     >✖️</button>
 
-                <h5 class="comment-content">{{this.comment_content}}</h5>
-                <p class="comment-meta">-{{user.author_name}} on {{formatTime this.comment_time 'MM/DD/YY h:mm A'}}</p>
-         
-
-            {{#with this as | comment |}}
-                {{#with ../../session as | session | }}
-                    {{#if session.loggedIn}}
-                        {{#if (compare comment.user_id session.user_id)}}           
-                        <button class="btn btn-primary btn-sm deleteCommentButton" data-id="{{comment.id}}" data-bs-toggle="modal" data-bs-target="#deleteCommentDialog">
-                        ✖️
-                        </button>
-                        {{/if}}
                     {{/if}}
-                {{/with}}
+                {{/if}}
             {{/with}}
-            </div>
-            
-        {{/each}}
+        {{/with}}
+        </div>
+        
+    {{/each}}
+        <div class="post-nav">
+            {{#with this as | post |}}
+            {{#with session as | session | }}
+            {{#if session.loggedIn}}
+            {{#if (compare post.user_id session.user_id)}}
+
+            <button 
+            class="btn btn-primary deletePostButton" 
+            data-id="{{post.id}}"
+            >✖️</button>
+                            
+            <button 
+            class="btn btn-primary editPostButton" 
+            data-id="{{post.id}}"
+            >✏️</button>
+
+            {{/if}}
+            <button 
+            class="btn btn-primary newCommentButton"
+            data-id="{{post.id}}"
+            >💬</button>
+
+            {{/if}}
+            {{/with}}
+            {{/with}}
         </div>
     </div>
+</div>

@@ -17,7 +17,8 @@ BlogPost.init(
       references: {
         model: User,
         key: 'id'
-      }
+      },
+      allowNull: false
     },
     post_title: {
       type: DataTypes.STRING,

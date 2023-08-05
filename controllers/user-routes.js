@@ -1,10 +1,38 @@
 const router = require('express').Router();
 const { db } = require('../model')
 
+
+router.post('/login', async (req,res) => {
+  const user = await db.authUser(req.body)
+  .catch((err) => {
+    return res.status(500).send("There was an error logging in.")
+  });
+  if ( user ) {  
+    req.session.user_id=user.id;
+    req.session.author_name=user.author_name;
+    req.session.email=user.email;
+    req.session.loggedIn=true;
+    req.session.save;
+    res.redirect('/')
+  }
+  else{
+    return res.status(401);
+  }
+})
+
+router.get('/logout',(req,res) => {
+  req.session.destroy();
+  res.redirect('/');
+});
+
+router.get('/register', (req, res) => {
+  return res.render('register');
+})
+
 router.get('/', async (req, res) => {
-  let user = await db.getAllUsers(req.params.id);
-  if (user) {
-    return res.json(user)
+  let users = await db.getAllUsers(req.params.id);
+  if (users) {
+     return res.json(users)
   }
   else {
     return res.status(404).send('User not found')
@@ -35,13 +63,12 @@ router.post('/', async (req, res) => {
 });
 
 router.put('/:id', async (req, res) => {
-  if (req.session.loggedIn && req.session.user_id === req.body.user_id) {
+  if (req.session.loggedIn) {
   await db.updateUser(req.params.id, req.body)
   .then((user) => {
     return res.status(200).json(user);
   })
   .catch((err) => {
-    console.log(err)
     return res.status(500).send("There was an error editing this user")
   });
   } else {
@@ -49,33 +76,7 @@ router.put('/:id', async (req, res) => {
   };
 });
 
-router.post('/login', async (req,res) => {
-  const user = await db.authUser(req.body)
-  .catch((err) => {
-    console.log(err)
-    return res.status(500).send("There was an error logging in.")
-  });
-  if ( user ) {  
-    req.session.user_id=user.id;
-    req.session.author_name=user.author_name;
-    req.session.email=user.email;
-    req.session.loggedIn=true;
-    req.session.save;
-    res.redirect('/')
-  }
-  else{
-    return res.status(401);
-  }
-})
 
-router.get('/logout',(req,res) => {
-  req.session.destroy();
-  res.redirect('/');
-});
-
-router.get('/register', (req, res) => {
-  return res.render('register');
-})
 
 
 

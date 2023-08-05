@@ -22,6 +22,19 @@ module.exports = {
 };
 
 const db = {
+
+  createComment: async (comment) => {
+    return await Comment.create(comment);
+  },
+
+  createUser: async (user) => {
+    return await User.create(user);
+  },
+
+  createBlogPost: async (blogPost) => {
+    await BlogPost.create(blogPost);
+  },
+
   getAllComments: async () => {
     return await Comment.findAll({
       include: [{ 
@@ -41,18 +54,6 @@ const db = {
           as: "user" },
       ]
     });
-  },
-
-  createComment: async (comment) => {
-    return await Comment.create(comment);
-  },
-
-  updateComment: async (id, comment) => {
-    return await Comment.update(comment, { where: { id: id } });
-  },
-
-  deleteComment: async (id) => {
-    return await Comment.destroy({ where: { id: id } });
   },
 
   getBlogPosts: async () => {
@@ -96,41 +97,77 @@ const db = {
     });
   },
 
-  createBlogPost: async (blogPost) => {
-    await BlogPost.create(blogPost);
-  },
-
-  updateBlogPost: async (id, blogPost) => {
-    return await BlogPost.update(blogPost, { where: { id: id } });
-  },
-
-  deleteBlogPost: async (id) => {
-    return await BlogPost.destroy({ where: { id: id } });
-  },
-
   getAllUsers: async () => {
-    return await User.findAll({
+    return await User.scope('withoutPassword').findAll({
       include: [{ model: BlogPost }, { model: Comment }],
     });
   },
 
   getUser: async (id) => {
-    return await User.findByPk(id, {
+    return await User.scope('withoutPassword').findByPk(id, {
       include: [{ model: BlogPost }, { model: Comment }],
     });
   },
 
-  createUser: async (user) => {
-    return await User.create(user);
+  updateBlogPost: async (sessionUserId, blogPost) => {
+    return await BlogPost.update(blogPost, { 
+      where: { 
+        id: blogPost.id, 
+        user_id: sessionUserId 
+      } 
+    })
+    .catch((err) => {
+      return err 
+    });
   },
 
-  updateUser: async (id, info) => {
-    return await User.update(info, { where: { id: id }, individualHooks: true })
+  updateUser: async (sessionUserId, userId, info) => {
+    return await User.update(info, { 
+      where: { 
+        id: userId && sessionUserId 
+      }, 
+        individualHooks: true 
+      })
     .catch((err) => {
       console.log(err)
       return false 
     });
   },
+
+
+  deleteBlogPost: async (sessionUserId, blogpostId) => {
+    console.log(sessionUserId, blogpostId)
+    return await BlogPost.destroy({ 
+      where: { 
+        id: blogpostId, 
+        user_id: sessionUserId 
+      } 
+    })
+    .then((blog) => {
+      return true
+    })
+    .catch((err) => {
+      return err 
+    });
+  },
+
+  deleteComment: async (sessionUserId, commentID) => {
+    return await Comment.destroy({ 
+      where: { 
+        id: commentID, 
+        user_id: sessionUserId 
+      } 
+    })
+    .then((comment) => {
+      return true
+    })
+    .catch((err) => {
+      return err 
+    });
+    
+  },
+
+
 
   authUser: async (user) => {
     console.log(user)

@@ -1,18 +1,15 @@
 
 
 
-const handleDeletePost = async (id, postUserId) => {
+const handleDeletePost = async (id) => {
     console.log("called handledeletepost " + id)
     await fetch(`/post/${id}`, {
         method: "DELETE",
-        body: JSON.stringify({
-            user_id: postUserId,
-            comment_id: id
-        }),
         headers: {
             "Content-Type": "application/json"
         }
-    }).then((_res) => {
+    })
+    .then((_res) => {
         window.location.href = "/"
     })
     .catch((err) => {
@@ -20,42 +17,65 @@ const handleDeletePost = async (id, postUserId) => {
     })
 }
 
-const handleDeleteComment = async (id, commentUserId) => {
+const handleDeleteComment = async (id) => {
     console.log("called handledeletecomment " + id)
     await fetch(`/comment/${id}`, {
         method: "DELETE",
-        body: JSON.stringify({
-            user_id: commentUserId,
-            comment_id: id
-        }),
         headers: {
             "Content-Type": "application/json"
         }
-    }).then((_res) => {
+    })
+    .then((_res) => {
+        console.log("deleted comment")
         window.location.href = "/"
+    })
+    .catch((err) => {
+        console.log(err)
     })
 }
 
-const handleEditPost = async (id) => {
+const handleEditPost = async (id=null) => {
     console.log("called handleeditpost " + id)
     let title = $("#postTitle").val();
-    let text = $("#postContent").val();
-    await fetch(`/post/${id}`, {
-        method: "PUT",
+    let content = $("#postContent").val();
+    console.log(title, content)
+    let method = id ? "PUT" : "POST";
+    await fetch(`/post/${id ? id : ""}`, {
+        method: method,
         body: JSON.stringify({
-            title: title,
-            text: text
-        }),
+            post_title: title,
+            post_content: content
+            }),
         headers: {
             "Content-Type": "application/json"
-        }
+            },
+        })
         .then((_res) => {
             window.location.href = "/"
         })
         .catch((err) => {
             console.log(err)
         })
-    })
+}
+
+const handleEditComment = async (blogId) => {
+    let content = $("#commentContent").val();
+    await fetch('/comment/', {
+        method: "POST",
+        body: JSON.stringify({
+            blogpost_id: blogId,
+            comment_content: content
+            }),
+        headers: {
+            "Content-Type": "application/json"
+            },
+        })
+        .then((_res) => {
+            window.location.href = "/"
+        })
+        .catch((err) => {
+            console.log(err)
+        })
 }
 
 const confirm = (title, text, callbackfn) => {
@@ -90,15 +110,15 @@ const confirm = (title, text, callbackfn) => {
 
 const editContent = (id=null, content=null, title=null) => {
     let editContentDialog = $(`
-    <div class="modal fade" id="deletePostDialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal fade" id="editPostDialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel"><textarea name="postTitle">${title}</textarea></h1>
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel"><textarea id="postTitle" placeholder="blog title">${title ? title : ""}</textarea></h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                <textarea name="postContent">${content}</textarea>
+                <textarea id="postContent" placeholder="blog text">${content ? content : ""}</textarea>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary cancelButton" data-bs-dismiss="modal">No</button>
@@ -117,15 +137,47 @@ const editContent = (id=null, content=null, title=null) => {
     editContentDialog.modal("show");
 }
 
+
+const editComment = (id=null, content=null, title=null) => {
+    let editContentDialog = $(`
+    <div class="modal fade" id="editPostDialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                <textarea id="commentContent" placeholder="comment text"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary cancelButton" data-bs-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-primary confirmButton">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    `)
+
+    editContentDialog.find(".confirmButton").on("click", function () {
+        handleEditComment(id)
+        editContentDialog.modal("hide");
+    })
+
+    editContentDialog.modal("show");
+}
+
+
 $(".editPostButton").on('click', (event) => {
     editContent(id)
 })
 
 
-$('newPostButton').on('click', () => {
+$('#newPostButton').on('click', () => {
     console.log("new post button clicked")
+    editContent()
 })
 
+$('.newCommentButton').on('click', (event) => {
+    let postId = event.target.getAttribute("data-id");
+    editComment(postId)
+})
 
 $(".deletePostButton").on('click', (event) => {
     let id = event.target.getAttribute("data-id");
@@ -142,7 +194,6 @@ $(".deleteCommentButton").on('click', (event) => {
 })
 
 $("#signupButton").on('click', () => {
-  
     let email = $("#userFormEmail").val();
     let password = $("#userFormPassword").val();
     console.log("sign up :" + email + " " + password)
