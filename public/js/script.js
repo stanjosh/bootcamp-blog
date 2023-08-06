@@ -10,7 +10,7 @@ const handleDeletePost = async (id) => {
         }
     })
     .then((_res) => {
-        window.location.href = "/"
+        location.reload()
     })
     .catch((err) => {
         console.log(err)
@@ -26,8 +26,7 @@ const handleDeleteComment = async (id) => {
         }
     })
     .then((_res) => {
-        console.log("deleted comment")
-        window.location.href = "/"
+        location.reload()
     })
     .catch((err) => {
         console.log(err)
@@ -51,7 +50,7 @@ const handleEditPost = async (id=null) => {
             },
         })
         .then((_res) => {
-            window.location.href = "/"
+            location.reload()
         })
         .catch((err) => {
             console.log(err)
@@ -71,12 +70,37 @@ const handleEditComment = async (blogId) => {
             },
         })
         .then((_res) => {
-            window.location.href = "/"
+            location.reload()
         })
         .catch((err) => {
             console.log(err)
         })
 }
+
+const handleSignup = async () => {
+    let authorName = $("#signupAuthorName").val();
+    let email = $("#signupEmail").val();
+    let password = $("#signupPassword").val();
+    await fetch(`/user/`, {
+        method: "POST",
+        body: JSON.stringify({
+            author_name: authorName,
+            email: email,
+            password: password
+        }),
+        headers: {
+            "Content-Type": "application/json"
+        }
+        })
+        .then((_res) => {
+            location.reload()
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+}
+
+
 
 const confirm = (title, text, callbackfn) => {
     let confirmDialog = $(`
@@ -114,15 +138,37 @@ const editContent = (id=null, content=null, title=null) => {
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel"><textarea id="postTitle" placeholder="blog title">${title ? title : ""}</textarea></h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <input 
+                        type="text" 
+                        class="form-control"  
+                        id="postTitle" 
+                        placeholder="blog title"
+                        value="${title ? title : ""}"
+                    ></textarea>
+                    <button 
+                        type="button" 
+                        class="btn-close" 
+                        data-bs-dismiss="modal" 
+                        aria-label="Close"
+                    ></button>
                 </div>
                 <div class="modal-body">
-                <textarea id="postContent" placeholder="blog text">${content ? content : ""}</textarea>
+                    <textarea 
+                        class="form-control" 
+                        id="postContent" 
+                        placeholder="blog text"
+                        rows="10"
+                    >${content ? content : ""}</textarea>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary cancelButton" data-bs-dismiss="modal">No</button>
-                    <button type="button" class="btn btn-primary confirmButton">Yes</button>
+                    <button 
+                        type="button" 
+                        class="btn btn-secondary cancelButton" 
+                        data-bs-dismiss="modal">Cancel</button>
+                    <button 
+                        type="button" 
+                        class="btn btn-primary confirmButton"
+                    >Post</button>
                 </div>
             </div>
         </div>
@@ -144,11 +190,20 @@ const editComment = (id=null, content=null, title=null) => {
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-body">
-                <textarea id="commentContent" placeholder="comment text"></textarea>
+                <textarea 
+                    class="form-control" 
+                    id="commentContent" 
+                    placeholder="comment text"></textarea>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary cancelButton" data-bs-dismiss="modal">No</button>
-                    <button type="button" class="btn btn-primary confirmButton">Yes</button>
+                    <button type="button" 
+                        class="btn btn-secondary cancelButton" 
+                        data-bs-dismiss="modal"
+                    >Cancel</button>
+                    <button 
+                        type="button" 
+                        class="btn btn-primary confirmButton"
+                    >Post</button>
                 </div>
             </div>
         </div>
@@ -163,9 +218,45 @@ const editComment = (id=null, content=null, title=null) => {
     editContentDialog.modal("show");
 }
 
+const signupDialog = () => {
+    let signupDialog = $(`
+    <div class="modal fade" id="editPostDialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                <input type="text" class="form-control" id="signupAuthorName" placeholder="author name" autocomplete="off">
+                <input type="text" class="form-control" id="signupEmail" placeholder="email" autocomplete="off">
+                <input type="password" class="form-control" id="signupPassword" placeholder="password" autocomplete="off">
+                <div class="modal-footer">
+                    <button type="button" 
+                        class="btn btn-secondary cancelButton" 
+                        data-bs-dismiss="modal"
+                    >Cancel</button>
+                    <button 
+                        type="button" 
+                        class="btn btn-primary confirmButton"
+                    >Sign up!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    `)
+
+    signupDialog.find(".confirmButton").on("click", function () {
+        handleSignup()
+        signupDialog.modal("hide");
+    })
+
+    signupDialog.modal("show");
+}
+
+
 
 $(".editPostButton").on('click', (event) => {
-    editContent(id)
+    let id = event.target.getAttribute("data-id");
+    let content = $(event.target).parent().siblings(".post-content").attr("data-post-content");
+    let title = $(event.target).parent().siblings(".post-title").attr("data-post-title");
+    editContent(id, content, title)
 })
 
 
@@ -194,27 +285,6 @@ $(".deleteCommentButton").on('click', (event) => {
 })
 
 $("#signupButton").on('click', () => {
-    let email = $("#userFormEmail").val();
-    let password = $("#userFormPassword").val();
-    console.log("sign up :" + email + " " + password)
-    handleSignup(email, password);
+    signupDialog()
 })
 
-const handleSignup = async (email, password) => {
-    await fetch(`/user/`, {
-        method: "POST",
-        body: JSON.stringify({
-            email: email,
-            password: password
-        }),
-        headers: {
-            "Content-Type": "application/json"
-        }
-        .then((_res) => {
-            window.location.href = "/"
-        })
-        .catch((err) => {
-            console.log(err)
-        })
-    })
-}

@@ -1,8 +1,17 @@
 {{> header }}
 
 <!--blog-->
-<div class="container px-3 mx-auto">
+<div class="container gx-0 blogContainer">
+    {{#unless posts}}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            There are no posts to display.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {{/unless}}
 
+    {{#if session.loggedIn}}
+        <button type="button" class="btn btn-sm controlButton newPostButton" id="newPostButton">+</button>
+    {{/if}}
     {{#each posts}}
         {{> blogPost this session=../session }}
     {{/each}}
@@ -10,17 +19,7 @@
 </div>
 
 
-<button type="button" class="btn newPostButton" id="newPostButton">+</button>
 
-
-
-<!-- error message if error -->
-{{#if errMessage}}
-<div class="alert alert-warning alert-dismissible fade show" role="alert">
-  <strong>Holy guacamole!</strong>{{errMessage}}
-  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-{{/if}}
 
 
 {{> footer }}

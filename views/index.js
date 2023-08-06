@@ -2,13 +2,17 @@ const router = require('express').Router();
 const { db } = require('../model') 
 
 
-router.use(async function (req, res, next) {
+
+router.get('/dashboard', async (req, res) => {
     res.locals.session = req.session;
-    res.locals.posts = await db.getBlogPosts();
-    next();
+    res.locals.posts = await db.getBlogPosts(req.session.user_id);
+    res.render('home');
 });
 
+
 router.get('/', async (req, res) => {
+    res.locals.session = req.session;
+    res.locals.posts = await db.getBlogPosts();
     res.render('home');
 });
     
