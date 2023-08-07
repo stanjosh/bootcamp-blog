@@ -3,9 +3,18 @@ CRUD blog ussing mysql2, express, handlebars, and sequelize
 
 ## Description
 
-Y-blog is a simple blog web app that uses a mariadb database to store blog posts and comments. The app uses express.js to handle the server and routing, mysql2 to connect to the database, sequelize to handle the database queries, and handlebars to render the html. The app allows users to create, read, update, and delete blog posts and comments. The app also allows users to login and logout. The app uses express-session to handle the user sessions. The app also uses bcrypt to hash the user passwords before storing them in the database. All the IDs for each item are a UUID. Seeding the database with the seed script assigns the blog posts to randomly selected users and then assigns the seeded comments to random users and blog posts. The app also uses dotenv to retrieve the database information from a .env file. The app also uses connect-session-sequelize to store the user sessions in the database. The app also uses express-handlebars to render the html. The app also uses express-s
+Y-blog is a simple blog web app that uses a mariadb database to store blog posts, comments, users, and sessions.
 
-[youtube video demonstration](https://youtu.be/kE05ffkQKNI)
+It uses express to handle the routes, sequelize to wrangle the database, and handlebars to render.
+
+It uses express-session to handle sessions and bcrypt to hash passwords. Additionally, userIDs should be hidden from the client.
+
+It uses dotenv to hide connection information.
+
+You can read all blog posts and comments without logging in. If you are logged in, you can create or delete your own comments, or create, update, and delete your own blog posts. You can also view your own dashboard, which shows all of your blog posts and comments.
+
+[live demo on heroku](https://y-blog-4ae3f01d0257.herokuapp.com/dashboard)
+
 
 
 ## Table of Contents

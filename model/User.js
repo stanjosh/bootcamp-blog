@@ -37,7 +37,7 @@ User.init(
     modelName: 'user',
     scopes: {
       withoutPassword: {
-        attributes: { exclude: ['password'] },
+        attributes: { exclude: ['password', 'id'] },
       }
     }
   }
