@@ -15,7 +15,12 @@ You can read all blog posts and comments without logging in. If you are logged i
 
 [live demo on heroku](https://y-blog-4ae3f01d0257.herokuapp.com/dashboard)
 
-
+![home page](./public/screenshots/home.png)
+the home page shows all blog posts and comments
+![dashboard](./public/screenshots/dashboard.png)
+the dashboard shows all of your blog posts and comments
+![blog post](./public/screenshots/blog.png)
+the blog post modal
 
 ## Table of Contents
 
