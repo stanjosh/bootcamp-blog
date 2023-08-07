@@ -40,13 +40,7 @@ const db = {
     })
   },
 
-  createBlogPost: async (blogPost) => {
-    return await BlogPost.create(blogPost)
-    .catch((err) => {
-      console.log(err)
-      return err
-    })
-  },
+
 
   getAllComments: async () => {
     return await Comment.findAll({
@@ -123,11 +117,22 @@ const db = {
     });
   },
 
-  updateBlogPost: async (sessionUserId, blogPost) => {
+  createBlogPost: async (sessionUserId, blogPost) => {
+    blogPost.user_id = sessionUserId
+    console.log(blogPost)
+    return await BlogPost.create(blogPost)
+    .catch((err) => {
+      console.log(err)
+      return err
+    })
+  },
+
+
+  updateBlogPost: async (sessionUserId, blogPostID, blogPost) => {
     console.log(sessionUserId, blogPost)
     return await BlogPost.update(blogPost, { 
       where: { 
-        id: blogPost.id, 
+        id: blogPostID, 
         user_id: sessionUserId 
       } 
     })

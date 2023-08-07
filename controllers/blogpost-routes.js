@@ -14,8 +14,7 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
   if (req.session.loggedIn) {  
-  req.body.user_id = req.session.user_id
-  await db.createBlogPost(req.body)
+  await db.createBlogPost(req.session.user_id, req.body)
     .then((blogpost) => {
       return res.status(200).json(blogpost);
     })
@@ -31,7 +30,7 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
   if (req.session.loggedIn) {
     console.log(req.body)
-  await db.updateBlogPost(req.session.user_id, req.body)
+  await db.updateBlogPost(req.session.user_id, req.params.id, req.body)
   .then((blogpost) => {
       return res.status(200).json(blogpost);
     })

@@ -21,11 +21,11 @@ To install necessary dependencies, run the following command:
   npm i
 ```
 
-Run your sql shell and ```source schema.sql``` file to create database called ```ecommerce_db```.
+Run your sql shell and ```source model/schema.sql``` file to create database called ```blog_db```.
 
 put your information in the ```.env``` file
 
-Run ```npm start seed``` to seed the database.
+Run ```npm run seed``` to seed the database.
 
 ## Usage
 

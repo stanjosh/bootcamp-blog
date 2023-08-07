@@ -9,7 +9,6 @@ BlogPost.init(
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
-      allowNull: false,
       primaryKey: true
     },
     user_id:{
@@ -30,7 +29,6 @@ BlogPost.init(
     },
     post_time: {
       type: DataTypes.DATE,
-      allowNull: false,
       defaultValue: DataTypes.NOW,
     }
   },

@@ -10,7 +10,6 @@ Comment.init(
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
-      allowNull: false,
       primaryKey: true
     },
     user_id:{
@@ -34,7 +33,6 @@ Comment.init(
     },
     comment_time:{
       type: DataTypes.DATE,
-      allowNull: false,
       defaultValue: DataTypes.NOW,
     },
   },
