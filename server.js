@@ -9,6 +9,7 @@ const cookieParser = require('cookie-parser');
 const app = express();
 const PORT = process.env.PORT || 3001;
 const session = require('express-session');
+const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
 
 var hbs = engine.create({
@@ -32,11 +33,16 @@ var hbs = engine.create({
 
 const oneDay = 1000 * 60 * 60 * 24;
 app.use(session({
+  store: new SequelizeStore({
+    db: sequelize
+  }),
   secret: process.env.SOME_OTHER_PLAINTEXT_PASSWORD,
   saveUninitialized:true,
   cookie: { maxAge: oneDay },
   resave: false 
 }));
+
+
 //username and password
 
 

@@ -42,6 +42,7 @@ const handleEditPost = async (id=null) => {
     await fetch(`/post/${id ? id : ""}`, {
         method: method,
         body: JSON.stringify({
+            id: id,
             post_title: title,
             post_content: content
             }),

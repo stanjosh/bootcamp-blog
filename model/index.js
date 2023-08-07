@@ -124,6 +124,7 @@ const db = {
   },
 
   updateBlogPost: async (sessionUserId, blogPost) => {
+    console.log(sessionUserId, blogPost)
     return await BlogPost.update(blogPost, { 
       where: { 
         id: blogPost.id, 

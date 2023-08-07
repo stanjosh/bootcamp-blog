@@ -30,6 +30,7 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
   if (req.session.loggedIn) {
+    console.log(req.body)
   await db.updateBlogPost(req.session.user_id, req.body)
   .then((blogpost) => {
       return res.status(200).json(blogpost);
