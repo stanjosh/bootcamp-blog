@@ -31,7 +31,7 @@ var hbs = engine.create({
   },
 });
 
-const oneDay = 1000 * 60 * 60 * 24;
+const oneDay = 1000 * 60 * 30;
 app.use(session({
   store: new SequelizeStore({
     db: sequelize
