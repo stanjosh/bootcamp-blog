@@ -50,6 +50,9 @@ const db = {
         as: "user",
        }],
       order: [["comment_time", "DESC"]]
+    })
+    .catch((err) => {
+      return err
     });
   },
 
@@ -60,6 +63,9 @@ const db = {
           attributes: ["id", "author_name"], 
           as: "user" },
       ]
+    })
+    .catch((err) => {
+      return err
     });
   },
 
@@ -85,6 +91,9 @@ const db = {
       return blogs.map((blog) => {
         return blog.get({plain: true})
       })
+    })
+    .catch((err) => {
+      return err
     });
   },
 
@@ -102,18 +111,27 @@ const db = {
           ]
         },
       ],
+    })
+    .catch((err) => {
+      return err
     });
   },
 
   getAllUsers: async () => {
     return await User.scope('withoutPassword').findAll({
       include: [{ model: BlogPost }, { model: Comment }],
+    })
+    .catch((err) => {
+      return err
     });
   },
 
   getUser: async (id) => {
     return await User.scope('withoutPassword').findByPk(id, {
       include: [{ model: BlogPost }, { model: Comment }],
+    })
+    .catch((err) => {
+      return err
     });
   },
 
@@ -125,6 +143,7 @@ const db = {
       console.log(err)
       return err
     })
+    
   },
 
 
@@ -149,7 +168,6 @@ const db = {
         individualHooks: true 
       })
     .catch((err) => {
-      console.log(err)
       return false 
     });
   },
