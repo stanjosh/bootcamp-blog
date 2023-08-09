@@ -133,3 +133,8 @@
     display: flex;
     justify-content: end;
 }
+
+.navbarlogo {
+    height: 4cqh;
+    width: 4cqh;
+}
