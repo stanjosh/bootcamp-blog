@@ -52,6 +52,7 @@ const commentData = [
   },
 ];
 
+//selects a random user and blogpost to belong to
 const commentSeeds = async (blogs, users) => {
   commentData.forEach((comment) => {
   comment.user_id = users[Math.floor(Math.random() * users.length)];

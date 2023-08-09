@@ -37,12 +37,14 @@ User.init(
     modelName: 'user',
     scopes: {
       withoutPassword: {
-        attributes: { exclude: ['password', 'id'] },
+        attributes: { exclude: ['password', 'id'] },  //custom scope to ensure even a hashed password is not send to client
       }
     }
   }
 );
 
+
+//obviously hashing passwords
 function hashPassword(user) {
   let password = user.password;
   let salt = bcrypt.genSaltSync(10);
@@ -51,6 +53,7 @@ function hashPassword(user) {
   console.log('ran hashPassword')
 }
 
+//custom method for user class to authenticate
 User.prototype.authenticate = function (password) {
   return bcrypt.compareSync(password, this.password);
 };

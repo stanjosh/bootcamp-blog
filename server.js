@@ -31,14 +31,14 @@ var hbs = engine.create({
   },
 });
 
-const oneDay = 1000 * 60 * 30;
+const thirtyMinutes = 1000 * 60 * 30;
 app.use(session({
   store: new SequelizeStore({
     db: sequelize
   }),
   secret: process.env.SOME_OTHER_PLAINTEXT_PASSWORD,
   saveUninitialized:true,
-  cookie: { maxAge: oneDay },
+  cookie: { maxAge: thirtyMinutes },
   resave: false 
 }));
 

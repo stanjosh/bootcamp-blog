@@ -41,7 +41,7 @@ const blogData = [
 ];
 
 
-
+//selects a random user from the random list of users. so much rng in these seeds
 const blogSeeds = async (users) => {
   blogData.forEach((blog) => {
   blog.user_id = users[Math.floor(Math.random() * users.length)];

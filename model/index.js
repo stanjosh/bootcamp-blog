@@ -31,17 +31,7 @@ const db = {
     })
   },
 
-  createUser: async (user) => {
-    console.log(user)
-    return await User.create(user)
-    .catch((err) => {
-      console.log(err)
-      return err
-    })
-  },
-
-
-
+  //api only
   getAllComments: async () => {
     return await Comment.findAll({
       include: [{ 
@@ -67,6 +57,73 @@ const db = {
     .catch((err) => {
       return err
     });
+  },
+
+  deleteComment: async (sessionUserId, commentID) => {
+    return await Comment.destroy({ 
+      where: { 
+        id: commentID, 
+        user_id: sessionUserId 
+      } 
+    })
+    .then((comment) => {
+      return true
+    })
+    .catch((err) => {
+      return err 
+    });
+    
+  },
+
+  createUser: async (user) => {
+    console.log(user)
+    return await User.create(user)
+    .catch((err) => {
+      console.log(err)
+      return err
+    })
+  },
+    
+  //api only
+  getAllUsers: async () => {
+    return await User.scope('withoutPassword').findAll({
+      include: [{ model: BlogPost }, { model: Comment }],
+    })
+    .catch((err) => {
+      return err
+    });
+  },
+
+  getUser: async (id) => {
+    return await User.scope('withoutPassword').findByPk(id, {
+      include: [{ model: BlogPost }, { model: Comment }],
+    })
+    .catch((err) => {
+      return err
+    });
+  },
+
+  updateUser: async (sessionUserId, userId, info) => {
+    return await User.update(info, { 
+      where: { 
+        id: userId && sessionUserId 
+      }, 
+        individualHooks: true 
+      })
+    .catch((err) => {
+      return false 
+    });
+  },
+  
+  createBlogPost: async (sessionUserId, blogPost) => {
+    blogPost.user_id = sessionUserId
+    console.log(blogPost)
+    return await BlogPost.create(blogPost)
+    .catch((err) => {
+      console.log(err)
+      return err
+    })
+    
   },
 
   getBlogPosts: async (id=null) => {
@@ -117,36 +174,6 @@ const db = {
     });
   },
 
-  getAllUsers: async () => {
-    return await User.scope('withoutPassword').findAll({
-      include: [{ model: BlogPost }, { model: Comment }],
-    })
-    .catch((err) => {
-      return err
-    });
-  },
-
-  getUser: async (id) => {
-    return await User.scope('withoutPassword').findByPk(id, {
-      include: [{ model: BlogPost }, { model: Comment }],
-    })
-    .catch((err) => {
-      return err
-    });
-  },
-
-  createBlogPost: async (sessionUserId, blogPost) => {
-    blogPost.user_id = sessionUserId
-    console.log(blogPost)
-    return await BlogPost.create(blogPost)
-    .catch((err) => {
-      console.log(err)
-      return err
-    })
-    
-  },
-
-
   updateBlogPost: async (sessionUserId, blogPostID, blogPost) => {
     console.log(sessionUserId, blogPost)
     return await BlogPost.update(blogPost, { 
@@ -159,19 +186,6 @@ const db = {
       return err 
     });
   },
-
-  updateUser: async (sessionUserId, userId, info) => {
-    return await User.update(info, { 
-      where: { 
-        id: userId && sessionUserId 
-      }, 
-        individualHooks: true 
-      })
-    .catch((err) => {
-      return false 
-    });
-  },
-
 
   deleteBlogPost: async (sessionUserId, blogpostId) => {
     console.log(sessionUserId, blogpostId)
@@ -189,24 +203,15 @@ const db = {
     });
   },
 
-  deleteComment: async (sessionUserId, commentID) => {
-    return await Comment.destroy({ 
-      where: { 
-        id: commentID, 
-        user_id: sessionUserId 
-      } 
-    })
-    .then((comment) => {
-      return true
-    })
-    .catch((err) => {
-      return err 
-    });
-    
-  },
 
 
 
+
+
+
+
+
+  //authenticate util
   authUser: async (user) => {
     console.log(user)
     let password = user.password;

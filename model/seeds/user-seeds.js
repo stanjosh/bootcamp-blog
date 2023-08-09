@@ -29,7 +29,7 @@ const userData = [
 ];
 
 
-
+//individualhooks ensures that the custom "hashpassword" hook is called for each user during bulk create
 const seedCategories = () => User.bulkCreate(userData, { individualHooks: true });
 
 

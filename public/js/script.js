@@ -101,7 +101,7 @@ const handleSignup = async () => {
 }
 
 
-
+//.modal for confirming a callback function
 const confirm = (title, text, callbackfn) => {
     let confirmDialog = $(`
     <div class="modal fade" id="deletePostDialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -131,9 +131,9 @@ const confirm = (title, text, callbackfn) => {
 }
 
 
-
-const editContent = (id=null, content=null, title=null) => {
-    let editContentDialog = $(`
+//modal for editing a blogpost
+const editBlogpost = (id=null, content=null, title=null) => {
+    let editBlogpostDialog = $(`
     <div class="modal fade" id="editPostDialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -175,17 +175,17 @@ const editContent = (id=null, content=null, title=null) => {
     </div>
     `)
 
-    editContentDialog.find(".confirmButton").on("click", function () {
+    editBlogpostDialog.find(".confirmButton").on("click", function () {
         handleEditPost(id)
-        editContentDialog.modal("hide");
+        editBlogpostDialog.modal("hide");
     })
 
-    editContentDialog.modal("show");
+    editBlogpostDialog.modal("show");
 }
 
 
 const editComment = (id=null, content=null, title=null) => {
-    let editContentDialog = $(`
+    let editCommentDialog = $(`
     <div class="modal fade" id="editPostDialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -210,12 +210,12 @@ const editComment = (id=null, content=null, title=null) => {
     </div>
     `)
 
-    editContentDialog.find(".confirmButton").on("click", function () {
+    editCommentDialog.find(".confirmButton").on("click", function () {
         handleEditComment(id)
-        editContentDialog.modal("hide");
+        editCommentDialog.modal("hide");
     })
 
-    editContentDialog.modal("show");
+    editCommentDialog.modal("show");
 }
 
 const signupDialog = () => {
@@ -256,13 +256,13 @@ $(".editPostButton").on('click', (event) => {
     let id = event.target.getAttribute("data-id");
     let content = $(event.target).parent().siblings(".post-content").attr("data-post-content");
     let title = $(event.target).parent().siblings(".post-title").attr("data-post-title");
-    editContent(id, content, title)
+    editBlogpost(id, content, title)
 })
 
 
 $('#newPostButton').on('click', () => {
     console.log("new post button clicked")
-    editContent()
+    editBlogpost()
 })
 
 $('.newCommentButton').on('click', (event) => {
